@@ -89,6 +89,7 @@
 4.  run "test/yolo_img_eval.py", use the trained model to detect the freiburg3 dataset and store the result in "halfsphere_bbox.txt" and "halfsphere_bbox.txt".
     run "test/show_pic.py" to show object detection example in  freiburg3 dataset.
 
+
 ############################
 ps: The data file does not have the image data,
     you can download the    "VOCtrainval_11-May-2012.tar" from voc webpage,
