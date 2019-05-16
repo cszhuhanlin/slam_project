@@ -1,3 +1,6 @@
+This is the yolov3 person object detection framework which is based on the open-source keras yolov3 architecture.
+
+The original project can be found in https://github.com/qqwweee/keras-yolo3. 
 
 ###############################################################
 
