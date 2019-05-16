@@ -149,8 +149,11 @@ data
 --------SegmentationObject
 
 ################################################################
+
 #code opration method
+
 ################################################################
+
 1.  run "voc_annotation.py"  #get voc person labels, store them in  "2012_person_val.txt" and "2012_person_train.txt".
     run "coco_annotation.py"  #get coco person labels, store them in  "coco_train.txt" and "coco_val.txt".
 
@@ -165,6 +168,7 @@ data
 
 
 ############################
+
 ps: The data file does not have the image data,
     you can download the    "VOCtrainval_11-May-2012.tar" from voc webpage,
                             "annotations_trainval2014.zip" and "train2014.zip" in coco web page,
