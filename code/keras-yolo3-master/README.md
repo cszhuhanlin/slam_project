@@ -1,99 +1,99 @@
-# keras-yolo3
+@@ -1 +1,98 @@
+# slam_project
 
-[![license](https://img.shields.io/github/license/mashape/apistatus.svg)](LICENSE)
+###############################################################
+#files description
+##############################################################
+--code
+----keras-yolo3-master
+------logs
+--------000
+----------trained_weights_final_2.h5            #final weight
+----------ep004-loss36.290-val_loss34.747.h5    #middle weight
+------model_data
+--------coco_classes.txt                        #coco data label class
+--------voc_classes.txt                         #voc data label class
+--------yolo_anchors.txt                        #yolov3 anchor boxes size
+--------yolo_weights.h5                         #original yolov3 weight
+------test
+--------yolo3
+----------__init__.py
+----------model.py                              #yolov3 model
+----------utils.py
+--------1341846332.086502.png                   #object detection example of freiburg3
+--------1341846337.150037.png                   #object detection example of freiburg3
+--------halfsphere_bbox.txt                     #object detection result of freiburg3_walking_halfsphere data
+--------show_pic.py                             #use the model to detect the freiburg3 example
+--------xyz_bbox.txt                            #object detection result of freiburg3_walking_xyz data
+--------yolo_copy.py                            #yolo_img_eval.py  invoking function
+--------yolo_img_eval.py                        #detect the object in freiburg3_walking_halfsphere and freiburg3_walking_xyz data
+------yolo3
+--------__init__.py
+--------model.py                                #yolov3 model
+--------utils.py
+------coco_train.txt                            #coco 2014 train data labels
+------yolo_anchors.txt                          #yolov3 anchor boxes size
+------yolo.py                                   #yolov3 detect object and function
+------yolov3.cfg                                #yolov3 parameter
+------2012_person_val.txt                       #voc 2012 validation data labels
+------2012_person_train.txt                     #voc 2012 train data labels
+------kmeans.py                                 #k-means algorithm to get the suitable anchor boxes
+------voc_annotation.py                         #get voc 2012 labels from original annotation format
+------coco_voc.txt                              #voc 2012 and coco 2014 labels
+------coco_val.txt                              #coco 2014 validation labels
+------convert.py
+------darknet53.cfg                             #darknet parameters
+------train.py                                  #train the yolov3 model
+------coco_annotation.py                        #get coco 2014 labels from original annotation format
+--data
+----annotations
+------person_keypoints_train2014.json           #coco 2014 original labels(person train)
+------person_keypoints_val2014.json             #coco 2014 original labels(person validation)
+----rgbd_dataset_freiburg3_walking_halfsphere
+------rgb                                       #freiburg3_walking_halfsphere rgb images
+------depth                                     #freiburg3_walking_halfsphere depth images
+------accelerometer.txt
+------depth.txt
+------groundtruth.txt
+------rgb.txt
+----rgbd_dataset_freiburg3_walking_xyz
+------rgb                                       #freiburg3_walking_halfsphere rgb images
+------depth                                     #freiburg3_walking_halfsphere depth images
+------accelerometer.txt
+------depth.txt
+------groundtruth.txt
+------rgb.txt
+----train2014                                   #coco 2014 images
+----VOCdevkit
+------VOC2012
+--------Annotations                             #all voc xml labels
+--------ImageSets
+----------main
+------------person_trainval.txt                 #voc person image IDs
+------------person_train.txt                    #voc person train imgae IDs
+------------person_val.txt                      #voc person validation image IDs
+--------JPEGImages                              #voc images
+--------SegmentationClass
+--------SegmentationObject
 
-## Introduction
+################################################################
+#code opration method
+################################################################
+1.  run "voc_annotation.py"  #get voc person labels, store them in  "2012_person_val.txt" and "2012_person_train.txt".
+    run "coco_annotation.py"  #get coco person labels, store them in  "coco_train.txt" and "coco_val.txt".
 
-A Keras implementation of YOLOv3 (Tensorflow backend) inspired by [allanzelener/YAD2K](https://github.com/allanzelener/YAD2K).
+2.  convert the "2012_person_val.txt" and the "coco_train.txt", store them in "coco_voc.txt".
 
+3.  run "k-means.py" to get the suitable anchor boxes size, which will use "coco_voc.txt".
 
----
+3.  run "train.py" to train the model. #"train.py" will use "trained_weights.h5", "yolo3","coco_voc.txt","voc_classes.txt","yolo_anchors.txt" and store the new weights
 
-## Quick Start
+4.  run "test/yolo_img_eval.py", use the trained model to detect the freiburg3 dataset and store the result in "halfsphere_bbox.txt" and "halfsphere_bbox.txt".
+    run "test/show_pic.py" to show object detection example in  freiburg3 dataset.
 
-1. Download YOLOv3 weights from [YOLO website](http://pjreddie.com/darknet/yolo/).
-2. Convert the Darknet YOLO model to a Keras model.
-3. Run YOLO detection.
-
-```
-wget https://pjreddie.com/media/files/yolov3.weights
-python convert.py yolov3.cfg yolov3.weights model_data/yolo.h5
-python yolo_video.py [OPTIONS...] --image, for image detection mode, OR
-python yolo_video.py [video_path] [output_path (optional)]
-```
-
-For Tiny YOLOv3, just do in a similar way, just specify model path and anchor path with `--model model_file` and `--anchors anchor_file`.
-
-### Usage
-Use --help to see usage of yolo_video.py:
-```
-usage: yolo_video.py [-h] [--model MODEL] [--anchors ANCHORS]
-                     [--classes CLASSES] [--gpu_num GPU_NUM] [--image]
-                     [--input] [--output]
-
-positional arguments:
-  --input        Video input path
-  --output       Video output path
-
-optional arguments:
-  -h, --help         show this help message and exit
-  --model MODEL      path to model weight file, default model_data/yolo.h5
-  --anchors ANCHORS  path to anchor definitions, default
-                     model_data/yolo_anchors.txt
-  --classes CLASSES  path to class definitions, default
-                     model_data/coco_classes.txt
-  --gpu_num GPU_NUM  Number of GPU to use, default 1
-  --image            Image detection mode, will ignore all positional arguments
-```
----
-
-4. MultiGPU usage: use `--gpu_num N` to use N GPUs. It is passed to the [Keras multi_gpu_model()](https://keras.io/utils/#multi_gpu_model).
-
-## Training
-
-1. Generate your own annotation file and class names file.  
-    One row for one image;  
-    Row format: `image_file_path box1 box2 ... boxN`;  
-    Box format: `x_min,y_min,x_max,y_max,class_id` (no space).  
-    For VOC dataset, try `python voc_annotation.py`  
-    Here is an example:
-    ```
-    path/to/img1.jpg 50,100,150,200,0 30,50,200,120,3
-    path/to/img2.jpg 120,300,250,600,2
-    ...
-    ```
-
-2. Make sure you have run `python convert.py -w yolov3.cfg yolov3.weights model_data/yolo_weights.h5`  
-    The file model_data/yolo_weights.h5 is used to load pretrained weights.
-
-3. Modify train.py and start training.  
-    `python train.py`  
-    Use your trained weights or checkpoint weights with command line option `--model model_file` when using yolo_video.py
-    Remember to modify class path or anchor path, with `--classes class_file` and `--anchors anchor_file`.
-
-If you want to use original pretrained weights for YOLOv3:  
-    1. `wget https://pjreddie.com/media/files/darknet53.conv.74`  
-    2. rename it as darknet53.weights  
-    3. `python convert.py -w darknet53.cfg darknet53.weights model_data/darknet53_weights.h5`  
-    4. use model_data/darknet53_weights.h5 in train.py
-
----
-
-## Some issues to know
-
-1. The test environment is
-    - Python 3.5.2
-    - Keras 2.1.5
-    - tensorflow 1.6.0
-
-2. Default anchors are used. If you use your own anchors, probably some changes are needed.
-
-3. The inference result is not totally the same as Darknet but the difference is small.
-
-4. The speed is slower than Darknet. Replacing PIL with opencv may help a little.
-
-5. Always load pretrained weights and freeze layers in the first stage of training. Or try Darknet training. It's OK if there is a mismatch warning.
-
-6. The training strategy is for reference only. Adjust it according to your dataset and your goal. And add further strategy if needed.
-
-7. For speeding up the training process with frozen layers train_bottleneck.py can be used. It will compute the bottleneck features of the frozen model first and then only trains the last layers. This makes training on CPU possible in a reasonable time. See [this](https://blog.keras.io/building-powerful-image-classification-models-using-very-little-data.html) for more information on bottleneck features.
+############################
+ps: The data file does not have the image data,
+    you can download the    "VOCtrainval_11-May-2012.tar" from voc webpage,
+                            "annotations_trainval2014.zip" and "train2014.zip" in coco web page,
+                            "rgbd_dataset_freiburg3_walking_halfsphere.tgz" and "rgbd_dataset_freiburg3_walking_xyz.tgz" from freiburg3 web page.
+    Then un compress them in the "data" folder.
