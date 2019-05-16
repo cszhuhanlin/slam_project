@@ -9,7 +9,9 @@
 ------logs
 --------000
 ----------trained_weights_final_2.h5            #final weight
+
 ----------ep004-loss36.290-val_loss34.747.h5    #middle weight
+
 ------model_data
 --------coco_classes.txt                        #coco data label class
 --------voc_classes.txt                         #voc data label class
